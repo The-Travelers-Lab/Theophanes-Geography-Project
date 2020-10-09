@@ -27,36 +27,52 @@ Checking if the settlement names and number of settlements are the same
 #finding duplicates in place names 
 GIS_Jesse$`Chronicle Name` [duplicated(GIS_Jesse$`Chronicle Name` )]
 wide_settle$Version_1_Names[duplicated(wide_settle$Version_1_Names)]
-#subsetting based on place names  
+
+#subsetting based on place names to check both datasets have the same list of names 
 nrow(GIS_Jesse)
 nrow(wide_settle)
 subset(wide_settle, !(Version_1_Names %in% GIS_Jesse$`Chronicle Name`)) 
 subset(GIS_Jesse, !(`Chronicle Name` %in% wide_settle$Version_1_Names))
 ```
 
-Checking if the total instances are the same 
+Checking if the total instances are the same (there are 2 methods)
+
+Method 1: provides an basic understanding if the total for each row match up in both datasets 
 
 ```{r}
 names(GIS_Jesse)[20]<-"GIS_TI"
+
+#merging both dataset using their row names 
 checking_TI <- merge(by.x = "Chronicle Name", by.y = "Version_1_Names" ,GIS_Jesse[,c(1,20)],wide_settle[,c(1,5)])
-checking_TI$Total_Instance_Inconsistencies <- checking_TI$GIS_TI == checking_TI$Total_Instances
+
+#creating an column that will tell us if the total instances column is the same in both datasets
+checking_TI$Total_Instance_Inconsistencies <- checking_TI$GIS_TI == checking_TI$Total_Instances 
 ```
 
+
+Method 2: providing an exact tool for comparing mentions. The following loop compares each cell (an cell meaning total mentions in an particular year for an particular row) against an equivalent cell in the other dataset 
+
 Cell-by-cell comparison
+
 ```{r}
 #wide_settle <- wide_settle[-c(106, 107, 273,294), ]
 year_inconsistency <- as.data.frame(wide_settle[,1])
 names(year_inconsistency)[1] <- "Item"
 year_inconsistency$Inconsistent_Years <- NA
-GIS_Jesse [is.na(GIS_Jesse )] <- 0
-wide_settle <- wide_settle[order(wide_settle$Version_1_Names),] #must sort
+
+GIS_Jesse [is.na(GIS_Jesse )] <- 0 #converting all NAs to 0s 
+
+#must sort the data name by row names in order for the loop to work properly - otherwise the data could be comparing the incorrect cells in the data
+wide_settle <- wide_settle[order(wide_settle$Version_1_Names),] 
+
 GIS_Jesse <- GIS_Jesse[order(GIS_Jesse$`Chronicle Name`),]
-for (i in 1:nrow(wide_settle)){
+
+for (i in 1:nrow(wide_settle)){ #the loop iterating cell by cell 
   for (c in 6:ncol(wide_settle)){
     part1 = wide_settle[i,c]
     part2 = as.data.frame(GIS_Jesse[i,c+15])
     result = part1== part2
-    if (result == FALSE){
+    if (result == FALSE){ #if two cells have different total instances, R will print the inconsistent values as the program runs 
       cat(wide_settle[i,1], names(wide_settle[c]), " --> ")
       cat("Rachel Data Value:", part1, " | Jesse Data Value: ", part2[,1], "\n")
       year_inconsistency[i,2] <- paste(year_inconsistency[i,2], ",",colnames(wide_settle[c]))
