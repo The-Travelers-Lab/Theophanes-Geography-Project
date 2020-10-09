@@ -1,0 +1,66 @@
+---
+title: "Comparing Two Data File"
+output: html_document
+---
+---
+title: "Comparing Years Over Place and GIS Data Files"
+output: html_document
+---
+
+Author: Rachel Chung
+
+The purpose of this script is to check whether the Years Over Place Settlement R.Data file and GIS Google Sheet Data File have the same name settlement names and total instances. 
+
+Importing packages and data
+
+```{r}
+library(descr)
+#load GIS file
+#load Years Over Place file
+GIS_Jesse <- Years_Place_Settlements_GIS_06_2020_1_
+```
+
+
+Checking if the settlement names and number of settlements are the same
+
+```{r setup, include=FALSE}
+#finding duplicates in place names 
+GIS_Jesse$`Chronicle Name` [duplicated(GIS_Jesse$`Chronicle Name` )]
+wide_settle$Version_1_Names[duplicated(wide_settle$Version_1_Names)]
+#subsetting based on place names  
+nrow(GIS_Jesse)
+nrow(wide_settle)
+subset(wide_settle, !(Version_1_Names %in% GIS_Jesse$`Chronicle Name`)) 
+subset(GIS_Jesse, !(`Chronicle Name` %in% wide_settle$Version_1_Names))
+```
+
+Checking if the total instances are the same 
+
+```{r}
+names(GIS_Jesse)[20]<-"GIS_TI"
+checking_TI <- merge(by.x = "Chronicle Name", by.y = "Version_1_Names" ,GIS_Jesse[,c(1,20)],wide_settle[,c(1,5)])
+checking_TI$Total_Instance_Inconsistencies <- checking_TI$GIS_TI == checking_TI$Total_Instances
+```
+
+Cell-by-cell comparison
+```{r}
+#wide_settle <- wide_settle[-c(106, 107, 273,294), ]
+year_inconsistency <- as.data.frame(wide_settle[,1])
+names(year_inconsistency)[1] <- "Item"
+year_inconsistency$Inconsistent_Years <- NA
+GIS_Jesse [is.na(GIS_Jesse )] <- 0
+wide_settle <- wide_settle[order(wide_settle$Version_1_Names),] #must sort
+GIS_Jesse <- GIS_Jesse[order(GIS_Jesse$`Chronicle Name`),]
+for (i in 1:nrow(wide_settle)){
+  for (c in 6:ncol(wide_settle)){
+    part1 = wide_settle[i,c]
+    part2 = as.data.frame(GIS_Jesse[i,c+15])
+    result = part1== part2
+    if (result == FALSE){
+      cat(wide_settle[i,1], names(wide_settle[c]), " --> ")
+      cat("Rachel Data Value:", part1, " | Jesse Data Value: ", part2[,1], "\n")
+      year_inconsistency[i,2] <- paste(year_inconsistency[i,2], ",",colnames(wide_settle[c]))
+    }
+  }
+}
+```
