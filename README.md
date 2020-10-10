@@ -3,7 +3,7 @@
 Currently this repository is simply for project members to upload archive copies of our ongoing "Year over Place" master file. 
 Project members: this should take place EVERY WEEK.
 
-For a general overview of our project, see [here] (http://travelerslab.research.wesleyan.edu/geography-and-narrative-in-the-chronicle-of-theophanes/)
+For a general overview of our project, see [here](http://travelerslab.research.wesleyan.edu/geography-and-narrative-in-the-chronicle-of-theophanes/)
 
 For specific discussion of our process and method, see [here] (http://travelerslab.research.wesleyan.edu/tag/narrative-and-geography/)
 
