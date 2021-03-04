@@ -1,4 +1,4 @@
-Place_Name,Item,,Category,Sub1,Sub2,Within_Places,Total_Instances,Latitude,Longitude,Source? (for LatLon),Notes/questions,
+Place_Name,Item,,Category,Sub1,Sub2,Within_Places,Total_Instances,Latitude,Longitude,Source? (for LatLon),Notes/questions
 Temple of Aphrodite,Aphaka - Temple of Aphrodite,,infrastructure,Religious Non-Christian,temple,,1,36.6889,27.3733,,
 Aigai - Temple of Asklepios,Aigai - Temple of Asklepios,,infrastructure,Religious Non-Christian,temple,,1,37.5983,23.0743,https://pleiades.stoa.org/places/570127?searchterm=temple+of+asklepios,
 Synagogue,Constantinople - Synagogue,,infrastructure,Religious Non-Christian,synagogue,,1,41.009504,28.978344,https://www.thebyzantinelegacy.com/chalkoprateia,"the text refers to the synagogue as being in ""in the Chalkoprateia"" before Justin destroys it; the byzantine legacy says this church (The Church of Theotokos Chalkoprateia) was built on the site of an old synagogue NK"
